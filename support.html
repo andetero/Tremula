@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support — Tremula</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #04050a; --surface: #0d0f18; --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0; --muted: rgba(255,255,255,0.5); --teal: #1fb07a;
+      --teal-dim: rgba(31,176,122,0.12); --orange: #e8863a;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px; border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    nav a:hover { color: var(--text); }
+    .content { max-width: 760px; margin: 0 auto; padding: 80px 40px; }
+    .eyebrow { font-size: 12px; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+    h1 { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero-sub { font-size: 18px; color: var(--muted); margin-bottom: 60px; }
+    h2 { font-size: 20px; font-weight: 600; margin: 48px 0 20px; }
+
+    /* FAQ */
+    .faq { display: flex; flex-direction: column; gap: 12px; margin-bottom: 60px; }
+    .faq-item {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; text-align: left; padding: 18px 24px;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 15px; font-weight: 600; color: var(--text);
+      font-family: inherit;
+    }
+    .faq-q:hover { background: rgba(255,255,255,0.03); }
+    .faq-chevron { transition: transform 0.2s; font-size: 12px; color: var(--muted); }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      display: none; padding: 0 24px 18px;
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* Contact card */
+    .contact-card {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: 20px; padding: 36px; text-align: center;
+    }
+    .contact-card h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+    .contact-card p { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
+    .contact-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: white; color: black;
+      padding: 12px 24px; border-radius: 12px;
+      text-decoration: none; font-weight: 600; font-size: 15px;
+      transition: opacity 0.2s;
+    }
+    .contact-btn:hover { opacity: 0.85; }
+
+    /* Status cards */
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 60px; }
+    .status-card {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+    .status-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .status-ok { font-size: 11px; color: var(--teal); }
+
+    footer { border-top: 0.5px solid var(--border); padding: 32px 40px; text-align: center; }
+    footer p { font-size: 13px; color: var(--muted); margin: 0; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { nav { padding: 14px 20px; } .content { padding: 60px 20px; } h1 { font-size: 32px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">🌍 Tremula</a>
+  <a href="privacy.html">Privacy</a>
+</nav>
+
+<div class="content">
+  <div class="eyebrow">Help Center</div>
+  <h1>Support</h1>
+  <p class="hero-sub">Answers to common questions, data source status, and how to get in touch.</p>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        Why does the app say "All quiet right now"?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        Tremula shows events as soon as data loads. If you see this on first launch, the app may still be fetching. Pull down to refresh. If it persists, check that you have an internet connection. The app caches the last known data so you'll always see something after your first successful load.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        Why does Tremula need my location?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        Your location is used to find earthquakes near you, determine if the aurora borealis might be visible at your latitude, and calculate how far the ISS is from you. Your coordinates go directly from your device to public government APIs — they never pass through any server we control. You can also use the app without location permission; it will just show global events instead of local ones.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        How current is the earthquake data?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        USGS earthquake data typically appears in the app within 1–5 minutes of an event occurring. The USGS network operates 24/7 and is one of the most reliable real-time geophysical data sources in the world. Tremula refreshes data every 5 minutes automatically, or immediately when you pull to refresh.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        When will I be able to see the aurora?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        Aurora visibility depends on the Kp index (geomagnetic activity level). At Kp 5+, aurora can be visible from latitudes around 50°N and above. At Kp 7+, it can reach as far south as 45°N. Tremula shows the current Kp level and a plain-language description so you always know what the sky is doing. For best viewing: find a dark location, look north, and go out after midnight.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        Does Tremula work offline?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        Yes. After your first successful data load, Tremula caches all events locally. If you lose internet connection, you'll see the last known data with a banner indicating when it was last updated. Meteor shower calendar data is always available offline since it's built into the app.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        Why isn't my app icon showing?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        If you built the app yourself from source, make sure you've added your 1024×1024 PNG to the AppIcon.appiconset folder inside Assets.xcassets, and that the Contents.json file references it by filename. Xcode requires the image file to be physically present in the asset catalog — it won't generate it automatically.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        How do I enable notifications?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        During onboarding, Tremula will ask for notification permission. If you declined and want to enable it later, go to your iPhone's Settings → Tremula → Notifications and turn on Allow Notifications. Tremula sends notifications for significant and major events — strong earthquakes, active aurora, and ISS passes nearby.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        What does the Kp number mean?
+        <span class="faq-chevron">▼</span>
+      </button>
+      <div class="faq-a">
+        The Kp index measures global geomagnetic activity on a scale of 0–9. 0 = completely quiet. 3 = minor activity, aurora near poles. 5 = geomagnetic storm, aurora to ~50°N. 7+ = severe storm, aurora visible across much of North America and Europe. NOAA updates this number every 3 hours.
+      </div>
+    </div>
+
+  </div>
+
+  <h2>Data source status</h2>
+  <div class="status-grid">
+    <div class="status-card">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-name">USGS Earthquakes</div>
+        <div class="status-ok">Operational</div>
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-name">NOAA Space Weather</div>
+        <div class="status-ok">Operational</div>
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-name">NASA Asteroids</div>
+        <div class="status-ok">Operational</div>
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-name">ISS Tracking</div>
+        <div class="status-ok">Operational</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Get in touch</h2>
+  <div class="contact-card">
+    <h3>Still need help?</h3>
+    <p>Send us an email and we'll get back to you as soon as possible — usually within 24 hours.</p>
+    <a href="mailto:support@tremula.app" class="contact-btn">
+      ✉️ support@tremula.app
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Tremula · <a href="index.html">Home</a> · <a href="privacy.html">Privacy Policy</a></p>
+</footer>
+
+<script>
+  function toggle(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

@@ -1,1 +1,559 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tremula — The Earth Never Stops Moving</title>
+  <meta name="description" content="Tremula monitors earthquakes, auroras, ISS passes, asteroids, and more — alerting you when something remarkable happens on or around planet Earth." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #04050a;
+      --surface: #0d0f18;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0;
+      --muted: rgba(255,255,255,0.45);
+      --teal: #1fb07a;
+      --teal-dim: rgba(31,176,122,0.12);
+      --orange: #e8863a;
+      --blue: #3a8ce8;
+      --green: #3ae87a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 4s) ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--o, 0.4); }
+      50% { opacity: 0.1; }
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(4,5,10,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--teal-dim);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-cta {
+      background: white !important;
+      color: black !important;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px !important;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal-dim);
+      border: 0.5px solid rgba(31,176,122,0.3);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 88px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      max-width: 900px;
+    }
+    .hero h1 span { color: var(--teal); }
+    .hero p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: black;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      border: 0.5px solid var(--border);
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    /* App icon */
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 26px;
+      margin-bottom: 36px;
+      box-shadow: 0 24px 64px rgba(31,176,122,0.2);
+    }
+
+    /* Live data strip */
+    .live-strip {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 0;
+      overflow: hidden;
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      background: var(--surface);
+    }
+    .live-item {
+      flex: 1;
+      padding: 20px 28px;
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .live-item:last-child { border-right: none; }
+    .live-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .live-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .live-sub { font-size: 12px; color: var(--muted); }
+    .live-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      margin-right: 5px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Features */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(255,255,255,0.16);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Data sources */
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .source-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .source-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .source-desc { font-size: 12px; color: var(--muted); }
+    .source-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--teal-dim);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+      width: fit-content;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 100px 40px;
+      position: relative;
+      z-index: 1;
+      border-top: 0.5px solid var(--border);
+    }
+    .cta-section h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 0.5px solid var(--border);
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer p { font-size: 13px; color: var(--muted); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .live-strip { flex-direction: column; }
+      .live-item { border-right: none; border-bottom: 0.5px solid var(--border); }
+      section { padding: 60px 20px; }
+      footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🌍</div>
+    <span class="nav-logo-text">Tremula</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#data">Data</a>
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="#download" class="nav-cta">Download Free</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <img src="AppIcon.png" alt="Tremula app icon" class="hero-icon" onerror="this.style.display='none'" />
+  <div class="hero-badge">
+    <span class="live-dot"></span>
+    Live · Free · No account needed
+  </div>
+  <h1>The Earth never<br /><span>stops moving.</span></h1>
+  <p>Tremula monitors earthquakes, auroras, ISS passes, asteroids, and more — alerting you the moment something remarkable happens near you.</p>
+  <div class="hero-buttons">
+    <a href="#download" class="btn-primary" id="download">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+    <a href="#features" class="btn-secondary">Learn more</a>
+  </div>
+</div>
+
+<!-- Live strip -->
+<div class="live-strip">
+  <div class="live-item">
+    <div class="live-label"><span class="live-dot"></span>Earthquakes today</div>
+    <div class="live-value">150+</div>
+    <div class="live-sub">M2.5+ globally, real time</div>
+  </div>
+  <div class="live-item">
+    <div class="live-label"><span class="live-dot"></span>ISS altitude</div>
+    <div class="live-value">408 km</div>
+    <div class="live-sub">Orbiting every 90 minutes</div>
+  </div>
+  <div class="live-item">
+    <div class="live-label"><span class="live-dot"></span>Space weather</div>
+    <div class="live-value">Live Kp</div>
+    <div class="live-sub">NOAA updated every 3 hours</div>
+  </div>
+  <div class="live-item">
+    <div class="live-label"><span class="live-dot"></span>Asteroids today</div>
+    <div class="live-value">NASA</div>
+    <div class="live-sub">Close approach tracking</div>
+  </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+  <div class="section-label">What Tremula monitors</div>
+  <h2 class="section-title">Everything happening<br />on and around Earth</h2>
+  <p class="section-sub">Seven real-time data streams, all free, all government-maintained, delivered to your pocket the moment something worth knowing happens.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(232,134,58,0.12)">🌊</div>
+      <h3>Earthquakes</h3>
+      <p>Real-time USGS seismic data. See M4.5+ events globally and M2.5+ near you, with magnitude, depth, and location — within minutes of occurring.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(58,232,122,0.12)">✨</div>
+      <h3>Aurora Borealis</h3>
+      <p>NOAA Kp index updated every 3 hours. Know when the northern lights might be visible from your latitude tonight — from quiet to extreme storm.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(58,140,232,0.12)">🛸</div>
+      <h3>ISS Tracking</h3>
+      <p>Real-time International Space Station location. See exactly where it is right now and how far from you — with context about what region it's flying over.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(232,232,58,0.12)">☄️</div>
+      <h3>Asteroids & Meteors</h3>
+      <p>NASA close approach data for the day, plus upcoming meteor shower alerts with peak rates and viewing tips — loaded even without a connection.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(232,58,58,0.12)">🌋</div>
+      <h3>Volcanic Activity</h3>
+      <p>USGS volcanic explosion detections logged alongside seismic data. The same network that monitors earthquakes catches volcanic events too.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(31,176,122,0.12)">📡</div>
+      <h3>Offline Support</h3>
+      <p>Last known data is cached locally. When you're off the grid, Tremula shows what it last saw with a clear timestamp — you're never left with a blank screen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Data sources -->
+<section id="data" style="padding-top:0">
+  <div class="section-label">Data sources</div>
+  <h2 class="section-title">All free.<br />All government-maintained.</h2>
+  <p class="section-sub">No scraped data. No third-party aggregators. Tremula connects directly to authoritative scientific sources that have been running for decades.</p>
+
+  <div class="sources-grid">
+    <div class="source-card">
+      <div class="source-name">USGS Earthquake Hazards</div>
+      <div class="source-desc">Real-time global seismic network</div>
+      <div class="source-badge">Free · No key</div>
+    </div>
+    <div class="source-card">
+      <div class="source-name">NOAA Space Weather</div>
+      <div class="source-desc">Kp index, geomagnetic activity</div>
+      <div class="source-badge">Free · No key</div>
+    </div>
+    <div class="source-card">
+      <div class="source-name">NASA NeoWs</div>
+      <div class="source-desc">Near-Earth asteroid tracking</div>
+      <div class="source-badge">Free · API key</div>
+    </div>
+    <div class="source-card">
+      <div class="source-name">Where the ISS At</div>
+      <div class="source-desc">Real-time ISS position</div>
+      <div class="source-badge">Free · No key</div>
+    </div>
+    <div class="source-card">
+      <div class="source-name">USGS Volcano Network</div>
+      <div class="source-desc">Volcanic explosion detections</div>
+      <div class="source-badge">Free · No key</div>
+    </div>
+    <div class="source-card">
+      <div class="source-name">AMS Meteor Calendar</div>
+      <div class="source-desc">Annual shower schedule & rates</div>
+      <div class="source-badge">Free · Offline</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="download">
+  <h2>Feel the planet.<br />It's free.</h2>
+  <p>No account. No subscription. Just download and go.</p>
+  <a href="#" class="btn-primary" style="display:inline-flex">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+    Download on the App Store
+  </a>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 Tremula. Made with ♥ in Colorado.</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="support.html">Support</a>
+  </div>
+</footer>
+
+<script>
+  // Generate stars
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    star.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      width: ${size}px;
+      height: ${size}px;
+      --o: ${Math.random() * 0.5 + 0.1};
+      --d: ${Math.random() * 4 + 2}s;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(star);
+  }
+</script>
+</body>
+</html>

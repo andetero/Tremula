@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Tremula</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #04050a; --surface: #0d0f18; --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0; --muted: rgba(255,255,255,0.5); --teal: #1fb07a;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px; border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    nav a:hover { color: var(--text); }
+    .content { max-width: 720px; margin: 0 auto; padding: 80px 40px; }
+    .eyebrow { font-size: 12px; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+    h1 { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .updated { font-size: 14px; color: var(--muted); margin-bottom: 60px; }
+    h2 { font-size: 22px; font-weight: 600; margin: 48px 0 12px; }
+    p { color: var(--muted); margin-bottom: 16px; font-size: 16px; }
+    ul { color: var(--muted); padding-left: 24px; margin-bottom: 16px; }
+    ul li { margin-bottom: 8px; font-size: 16px; }
+    .highlight {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: 14px; padding: 20px 24px; margin: 32px 0;
+    }
+    .highlight p { margin: 0; color: var(--text); font-size: 15px; }
+    footer { border-top: 0.5px solid var(--border); padding: 32px 40px; text-align: center; }
+    footer p { font-size: 13px; color: var(--muted); margin: 0; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { nav { padding: 14px 20px; } .content { padding: 60px 20px; } h1 { font-size: 32px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">🌍 Tremula</a>
+  <a href="support.html">Support</a>
+</nav>
+
+<div class="content">
+  <div class="eyebrow">Legal</div>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: January 1, 2025</p>
+
+  <div class="highlight">
+    <p>🔒 <strong>The short version:</strong> Tremula does not collect, store, or share any personal data. Your location never leaves your device. There are no accounts, no tracking, and no ads.</p>
+  </div>
+
+  <h2>What data we collect</h2>
+  <p>Tremula collects no personal data whatsoever. Specifically:</p>
+  <ul>
+    <li><strong>Location:</strong> Used only on-device to fetch nearby earthquake data and calculate aurora visibility. Your coordinates are sent directly from your device to public government APIs (USGS, NOAA). We never see, store, or log your location.</li>
+    <li><strong>Usage data:</strong> We collect no analytics, crash reports, or usage metrics.</li>
+    <li><strong>Identifiers:</strong> We collect no device identifiers, advertising IDs, or any other identifiers.</li>
+    <li><strong>Account data:</strong> Tremula has no accounts. There is no sign-up, login, or profile.</li>
+  </ul>
+
+  <h2>Third-party data sources</h2>
+  <p>Tremula fetches publicly available data from the following government and public APIs. When your device requests data from these services, standard networking metadata (such as your IP address) may be logged by those services according to their own privacy policies:</p>
+  <ul>
+    <li>USGS Earthquake Hazards Program (earthquake.usgs.gov)</li>
+    <li>NOAA Space Weather Prediction Center (services.swpc.noaa.gov)</li>
+    <li>NASA Open APIs — NeoWs asteroid data (api.nasa.gov)</li>
+    <li>Where the ISS At API (api.wheretheiss.at)</li>
+  </ul>
+  <p>These are all public government or community services. We recommend reviewing their privacy policies if you have concerns about those specific requests.</p>
+
+  <h2>Local storage</h2>
+  <p>Tremula stores a small cache of recent event data in your device's local storage (UserDefaults) so the app can display data while offline. This data never leaves your device and is overwritten each time the app refreshes.</p>
+
+  <h2>Notifications</h2>
+  <p>If you grant notification permissions, Tremula uses Apple's Push Notification service (APNs) to deliver local notifications. These notifications are scheduled and triggered on-device — no notification content passes through our servers because we have no servers.</p>
+
+  <h2>Children's privacy</h2>
+  <p>Tremula does not knowingly collect any data from anyone, including children under 13. Because we collect no data at all, Tremula is safe for users of all ages.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If we ever change this policy, we will update the date at the top of this page. Given that we collect no data, we do not anticipate meaningful changes.</p>
+
+  <h2>Contact</h2>
+  <p>If you have any questions about this privacy policy, please reach out via our <a href="support.html" style="color: var(--teal);">support page</a>.</p>
+</div>
+
+<footer>
+  <p>© 2025 Tremula · <a href="index.html">Home</a> · <a href="support.html">Support</a></p>
+</footer>
+
+</body>
+</html>
